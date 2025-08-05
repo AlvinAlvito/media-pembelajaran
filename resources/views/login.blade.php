@@ -173,7 +173,7 @@
                                 </div>
 
                                 <div class="section-overlay"></div>
-                                 <div class="social-share d-flex">
+                                <div class="social-share d-flex">
                                     <p class="text-white me-4">Bagikan:</p>
                                     <ul class="social-icon">
                                         <li class="social-icon-item">
@@ -204,330 +204,66 @@
                     </div>
                 </div>
             </div>
-
+            {{-- Kategori Materi --}}
             <div class="container-fluid">
                 <div class="row">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="saraf-tab" data-bs-toggle="tab"
-                                data-bs-target="#saraf-tab-pane" type="button" role="tab"
-                                aria-controls="saraf-tab-pane" aria-selected="true">Sistem Saraf</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="hormon-tab" data-bs-toggle="tab"
-                                data-bs-target="#hormon-tab-pane" type="button" role="tab"
-                                aria-controls="hormon-tab-pane" aria-selected="false">Sistem Hormon</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="indera-tab" data-bs-toggle="tab"
-                                data-bs-target="#indera-tab-pane" type="button" role="tab"
-                                aria-controls="indera-tab-pane" aria-selected="false">Sistem Indera</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="homeostasis-tab" data-bs-toggle="tab"
-                                data-bs-target="#homeostasis-tab-pane" type="button" role="tab"
-                                aria-controls="homeostasis-tab-pane" aria-selected="false">Homeostasis</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="jaringan-tab" data-bs-toggle="tab"
-                                data-bs-target="#jaringan-tab-pane" type="button" role="tab"
-                                aria-controls="jaringan-tab-pane" aria-selected="false">Jaringan Tumbuhan</button>
-                        </li>
+                        @foreach ($kategori as $key => $k)
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {{ $key === 0 ? 'active' : '' }}" id="tab-{{ $k->id }}"
+                                    data-bs-toggle="tab" data-bs-target="#tab-pane-{{ $k->id }}"
+                                    type="button" role="tab" aria-controls="tab-pane-{{ $k->id }}"
+                                    aria-selected="{{ $key === 0 ? 'true' : 'false' }}">{{ $k->nama }}</button>
+                            </li>
+                        @endforeach
                     </ul>
+
                 </div>
             </div>
-
+            {{-- Isi materi berdasarkan kategori --}}
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="tab-content" id="myTabContent">
-
-                            <!-- Tab 1: Sistem Saraf -->
-                            <div class="tab-pane fade show active" id="saraf-tab-pane" role="tabpanel"
-                                aria-labelledby="saraf-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Struktur Sistem Saraf</h5>
-                                                        <p class="mb-0">Mengenal otak, sumsum tulang belakang, dan
-                                                            jalur saraf.</p>
-                                                    </div>
-                                                    <span class="badge bg-design rounded-pill ms-auto">🧠</span>
+                            @foreach ($kategori as $key => $k)
+                                <div class="tab-pane fade {{ $key === 0 ? 'show active' : '' }}"
+                                    id="tab-pane-{{ $k->id }}" role="tabpanel"
+                                    aria-labelledby="tab-{{ $k->id }}">
+                                    <div class="row mt-4">
+                                        @forelse ($k->materi as $item)
+                                            <div class="col-lg-4 col-md-6 col-12 mb-4">
+                                                <div
+                                                    class="custom-block bg-white shadow-lg h-100 d-flex flex-column justify-content-between">
+                                                    <a href="{{ route('materi.show', $item->id) }}">
+                                                        <div class="d-flex">
+                                                            <div>
+                                                                <h5 class="mb-2">{{ $item->judul }}</h5>
+                                                                <p class="mb-0">
+                                                                    {{ \Illuminate\Support\Str::words(strip_tags($item->isi), 10, '...') }}
+                                                                </p>
+                                                            </div>
+                                                            <span
+                                                                class="badge bg-secondary rounded-pill ms-auto">📚</span>
+                                                        </div>
+                                                        @if ($item->gambar)
+                                                            <img src="{{ asset('storage/' . $item->gambar) }}"
+                                                                class="custom-block-image img-fluid mt-3"
+                                                                alt="gambar materi"
+                                                                style="object-fit: cover; width: 100%; height: 200px;">
+                                                        @endif
+                                                    </a>
                                                 </div>
-                                                <img src="images/topics/saraf.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Refleks dan Impuls</h5>
-                                                        <p class="mb-0">Bagaimana tubuh merespons rangsangan secara
-                                                            otomatis melalui impuls listrik.</p>
-                                                    </div>
-                                                    <span class="badge bg-design rounded-pill ms-auto">⚡</span>
-                                                </div>
-                                                <img src="images/topics/refleks.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Neuron dan Sinapsis</h5>
-                                                        <p class="mb-0">Struktur neuron dan proses komunikasi melalui
-                                                            sinapsis.</p>
-                                                    </div>
-                                                    <span class="badge bg-design rounded-pill ms-auto">🔌</span>
-                                                </div>
-                                                <img src="images/topics/neuron.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
+                                            </div>
+                                        @empty
+                                            <div class="col-12">
+                                                <p class="text-muted">Belum ada materi di kategori ini.</p>
+                                            </div>
+                                        @endforelse
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Tab 2: Sistem Hormon -->
-                            <div class="tab-pane fade" id="hormon-tab-pane" role="tabpanel"
-                                aria-labelledby="hormon-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Kelenjar Endokrin</h5>
-                                                        <p class="mb-0">Memahami fungsi hipofisis, tiroid, pankreas,
-                                                            dan lainnya.</p>
-                                                    </div>
-                                                    <span class="badge bg-finance rounded-pill ms-auto">🧬</span>
-                                                </div>
-                                                <img src="images/topics/endokrin.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Mekanisme Kerja Hormon</h5>
-                                                        <p class="mb-0">Bagaimana hormon mengatur metabolisme dan
-                                                            homeostasis tubuh.</p>
-                                                    </div>
-                                                    <span class="badge bg-finance rounded-pill ms-auto">⚙️</span>
-                                                </div>
-                                                <img src="images/topics/hormon.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Gangguan Sistem Hormon</h5>
-                                                        <p class="mb-0">Diabetes, gigantisme, dan kelainan hormonal
-                                                            lainnya.</p>
-                                                    </div>
-                                                    <span class="badge bg-finance rounded-pill ms-auto">🚨</span>
-                                                </div>
-                                                <img src="images/topics/hormon_gangguan.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab 3: Sistem Indera -->
-                            <div class="tab-pane fade" id="indera-tab-pane" role="tabpanel"
-                                aria-labelledby="indera-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Indera Penglihatan</h5>
-                                                        <p class="mb-0">Struktur mata, fungsi retina, dan gangguan
-                                                            seperti miopi.</p>
-                                                    </div>
-                                                    <span class="badge bg-music rounded-pill ms-auto">👁️</span>
-                                                </div>
-                                                <img src="images/topics/mata.png" class="custom-block-image img-fluid"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Indera Pendengaran</h5>
-                                                        <p class="mb-0">Telinga luar, tengah, dalam, dan fungsi
-                                                            koklea.</p>
-                                                    </div>
-                                                    <span class="badge bg-music rounded-pill ms-auto">👂</span>
-                                                </div>
-                                                <img src="images/topics/telinga.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Indera Peraba dan Pengecap</h5>
-                                                        <p class="mb-0">Kulit dan lidah dalam mengenali rasa, suhu,
-                                                            dan tekanan.</p>
-                                                    </div>
-                                                    <span class="badge bg-music rounded-pill ms-auto">🤚</span>
-                                                </div>
-                                                <img src="images/topics/kulit.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab 4: Homeostasis -->
-                            <div class="tab-pane fade" id="homeostasis-tab-pane" role="tabpanel"
-                                aria-labelledby="homeostasis-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Konsep Homeostasis</h5>
-                                                        <p class="mb-0">Kemampuan tubuh mempertahankan lingkungan
-                                                            internal stabil.</p>
-                                                    </div>
-                                                    <span class="badge bg-education rounded-pill ms-auto">🔄</span>
-                                                </div>
-                                                <img src="images/topics/homeostasis.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Regulasi Suhu Tubuh</h5>
-                                                        <p class="mb-0">Hipotalamus dan keringat sebagai pengatur
-                                                            suhu tubuh.</p>
-                                                    </div>
-                                                    <span class="badge bg-education rounded-pill ms-auto">🌡️</span>
-                                                </div>
-                                                <img src="images/topics/suhu.png" class="custom-block-image img-fluid"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Osmoregulasi & Glukoregulator</h5>
-                                                        <p class="mb-0">Pengaturan kadar air dan gula darah dalam
-                                                            tubuh.</p>
-                                                    </div>
-                                                    <span class="badge bg-education rounded-pill ms-auto">💧</span>
-                                                </div>
-                                                <img src="images/topics/gula.png" class="custom-block-image img-fluid"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab 5: Jaringan Tumbuhan -->
-                            <div class="tab-pane fade" id="jaringan-tab-pane" role="tabpanel"
-                                aria-labelledby="jaringan-tab">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Jaringan Meristem</h5>
-                                                        <p class="mb-0">Jaringan yang aktif membelah dan bertanggung
-                                                            jawab pada pertumbuhan.</p>
-                                                    </div>
-                                                    <span class="badge bg-advertising rounded-pill ms-auto">🌱</span>
-                                                </div>
-                                                <img src="images/topics/meristem.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Jaringan Pengangkut</h5>
-                                                        <p class="mb-0">Xilem dan floem sebagai pengangkut air dan
-                                                            hasil fotosintesis.</p>
-                                                    </div>
-                                                    <span class="badge bg-advertising rounded-pill ms-auto">💧🍃</span>
-                                                </div>
-                                                <img src="images/topics/xilem_floem.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="/materi">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Jaringan Pelindung</h5>
-                                                        <p class="mb-0">Epidermis dan gabus melindungi permukaan
-                                                            tumbuhan.</p>
-                                                    </div>
-                                                    <span class="badge bg-advertising rounded-pill ms-auto">🛡️</span>
-                                                </div>
-                                                <img src="images/topics/epidermis.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            @endforeach
                         </div>
+
                     </div>
                 </div>
         </section>
@@ -719,7 +455,7 @@
                 <div class="col-lg-3 col-12 mb-4 pb-2">
                     <a class="navbar-brand mb-2" href="index.html">
                         <i class="bi-book-half"></i>
-                        <span>Media Biologi XI</span>
+                        <span>Media Biologi</span>
                     </a>
                     <p class="text-white mt-2">Platform pembelajaran interaktif untuk memahami sistem regulasi tubuh
                         manusia.</p>

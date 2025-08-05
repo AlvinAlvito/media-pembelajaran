@@ -18,13 +18,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap"
         rel="stylesheet">
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="css/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
-    <link href="css/templatemo-topic-listing.css" rel="stylesheet">
+    <link href="/css/templatemo-topic-listing.css" rel="stylesheet">
 
 </head>
 
@@ -79,106 +79,112 @@
         </nav>
 
 
+
+
+        {{-- HEADER --}}
         <header class="site-header d-flex flex-column justify-content-center align-items-center">
             <div class="container">
                 <div class="row justify-content-center align-items-center">
-
                     <div class="col-lg-5 col-12 mb-5">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Homepage</a></li>
-
-                                <li class="breadcrumb-item active" aria-current="page">Web Design</li>
+                                <li class="breadcrumb-item"><a href="{{ url('/') }}">Homepage</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $materi->kategori->nama ?? '-' }}</li>
                             </ol>
                         </nav>
 
-                        <h2 class="text-white">Introduction to <br> Web Design 101</h2>
+                        <h2 class="text-white">{{ $materi->judul }}</h2>
 
                         <div class="d-flex align-items-center mt-5">
-                            <a href="/quiz" class="btn custom-btn custom-border-btn smoothscroll me-4">Kembali</a>
+                            <a href="{{ url('/#section_2') }}" class="btn custom-btn custom-border-btn me-4">
+                                <i class="bi bi-arrow-left-circle me-2"></i> Kembali Ke Beranda
+                            </a>
 
-                            <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+
+                            @php
+                                $videoId = null;
+                                if ($materi->link_video) {
+                                    preg_match(
+                                        '/(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([a-zA-Z0-9_-]+)/',
+                                        $materi->link_video,
+                                        $matches,
+                                    );
+                                    $videoId = $matches[1] ?? null;
+                                }
+                            @endphp
+
                         </div>
                     </div>
 
                     <div class="col-lg-5 col-12">
-                        <div class="topics-detail-block bg-white shadow-lg">
-                            <img src="images/topics/undraw_Remote_design_team_re_urdx.png"
-                                class="topics-detail-block-image img-fluid">
-                        </div>
+                        @if ($videoId)
+                            <div class="ratio ratio-16x9">
+                                <iframe src="https://www.youtube.com/embed/{{ $videoId }}" title="YouTube video"
+                                    allowfullscreen></iframe>
+                            </div>
+                        @else
+                            <div class="topics-detail-block bg-white shadow-lg">
+                                <img src="{{ asset('images/default.jpg') }}" class="topics-detail-block-image img-fluid"
+                                    alt="Gambar Default">
+                            </div>
+                        @endif
                     </div>
-
                 </div>
             </div>
         </header>
 
 
+        {{-- ISI MATERI --}}
         <section class="topics-detail-section section-padding" id="topics-detail">
+
+
             <div class="container">
                 <div class="row">
-
                     <div class="col-lg-8 col-12 m-auto">
-                        <h3 class="mb-4">Introduction to Web Design</h3>
-
-                        <p>So how can you stand out, do something unique and interesting, build an online business, and
-                            get paid enough to change life. Please visit TemplateMo website to download free website
-                            templates.</p>
-
-                        <p><strong>There are so many ways to make money online</strong>. Below are several platforms you
-                            can use to find success. Keep in mind that there is no one path everyone can take. If that
-                            were the case, everyone would have a million dollars.</p>
-
-                        <blockquote>
-                            Freelancing your skills isn’t going to make you a millionaire overnight.
-                        </blockquote>
-
-                        <div class="row my-4">
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <img src="images/businesswoman-using-tablet-analysis.jpg"
-                                    class="topics-detail-block-image img-fluid">
+                        <h3 class="mb-4">{{ $materi->judul }}</h3>
+                        {{-- Gambar Materi Full Width --}}
+                        @if ($materi->gambar)
+                            <div class="w-100 mb-4">
+                                <img src="{{ asset('storage/' . $materi->gambar) }}" class="img-fluid w-100"
+                                    style="max-height: 500px; object-fit: cover;" alt="Gambar Materi">
                             </div>
-
-                            <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0 mt-md-0">
-                                <img src="images/colleagues-working-cozy-office-medium-shot.jpg"
-                                    class="topics-detail-block-image img-fluid">
-                            </div>
+                        @endif
+                        {{-- Isi Materi --}}
+                        <div class="isi-materi">
+                            {!! $materi->isi !!}
                         </div>
-
-                        <p>Most people start with freelancing skills they already have as a side hustle to build up
-                            income. This extra cash can be used for a vacation, to boost up savings, investing, build
-                            business.</p>
                     </div>
-
                 </div>
             </div>
         </section>
 
 
+
+        {{-- FORM QUIZ --}}
         <section class="section-padding section-bg">
             <div class="container">
                 <div class="row justify-content-center">
-
                     <div class="col-lg-5 col-12">
-                        <img src="images/rear-view-young-college-student.jpg" class="newsletter-image img-fluid"
-                            alt="">
+                        <img src="{{ asset('images/rear-view-young-college-student.jpg') }}"
+                            class="newsletter-image img-fluid" alt="">
                     </div>
 
                     <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
                         <form class="custom-form subscribe-form" action="#" method="post" role="form">
                             <h4 class="mb-4 pb-2">Ayo Mainkan Quiz Untuk Menambah Pengetahuanmu</h4>
-
-                            <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukan Nama Kamu.."
-                                required="">
-
+                            <input type="text" name="nama" id="nama" class="form-control"
+                                placeholder="Masukan Nama Kamu.." required="">
                             <div class="col-lg-12 col-12">
-                                <button type="submit" class="form-control">Mainkan Quizz</button>
+                                <button type="submit" onclick="window.location.href='/quiz'" class="form-control">Mainkan Quizz</button>
+
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </section>
+
     </main>
 
     <footer class="site-footer section-padding">
@@ -189,7 +195,7 @@
                 <div class="col-lg-3 col-12 mb-4 pb-2">
                     <a class="navbar-brand mb-2" href="index.html">
                         <i class="bi-book-half"></i>
-                        <span>Media Biologi XI</span>
+                        <span>Media Biologi</span>
                     </a>
                     <p class="text-white mt-2">Platform pembelajaran interaktif untuk memahami sistem regulasi tubuh
                         manusia.</p>
@@ -252,11 +258,11 @@
         integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous">
     </script>
     <!-- JAVASCRIPT FILES -->
-    <script src="script/jquery.min.js"></script>
-    <script src="script/bootstrap.bundle.min.js"></script>
-    <script src="script/jquery.sticky.js"></script>
-    <script src="script/click-scroll.js"></script>
-    <script src="script/custom.js"></script>
+    <script src="/script/jquery.min.js"></script>
+    <script src="/script/bootstrap.bundle.min.js"></script>
+    <script src="/script/jquery.sticky.js"></script>
+    <script src="/script/click-scroll.js"></script>
+    <script src="/script/custom.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </body>
 

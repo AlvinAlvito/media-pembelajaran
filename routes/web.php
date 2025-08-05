@@ -1,26 +1,32 @@
 <?php
 
 // use App\Http\Controllers\Api\ChartController;
+use App\Models\Kategori;
+use App\Models\Materi;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\SiswaController;
-
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\QuizController;
 // ===================
 // Halaman Index & Login
 // ===================
 Route::get('/', function () {
-    return view('login');
+    $kategori = Kategori::with('materi')->get(); // relasi kategori ke materi
+    return view('login', compact('kategori'));
 })->name('login');
 
-Route::get('/materi', function () {
-    return view('public.materi');
-})->name('materi');
 
-Route::get('/quiz', function () {
-    return view('public.quiz');
-})->name('quiz');
+Route::get('/materi/{id}', function ($id) {
+    $materi = Materi::with('kategori')->findOrFail($id);
+    return view('public.materi', compact('materi'));
+})->name('materi.show');
+
+
+Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
+
 
 // ===================
 // Proses Login Manual
@@ -48,37 +54,35 @@ Route::get('/logout', function () {
 // ===================
 // Dashboard Admin
 // ===================
-use App\Http\Controllers\DashboardController;
-
 Route::get('/admin', function () {
-    if (!session('is_admin')) {
-        return redirect('/');
-    }
-    return app(DashboardController::class)->index(); // <-- GANTI view() ke controller
-})->name('index');
+    return view('admin.index');
+})->name('admin.index');
 
 
 // ===================
 // CRUD Data Materi
 // ===================
-Route::get('/admin/data-Materi', function () {
+Route::get('/admin/data-materi', function () {
     if (!session('is_admin')) return redirect('/');
     return app(MateriController::class)->index();
-})->name('Materi.index');
+})->name('materi.index');
 
-Route::post('/admin/data-Materi', function (Request $request) {
+Route::post('/admin/data-materi', function (Request $request) {
     if (!session('is_admin')) return redirect('/');
     return app(MateriController::class)->store($request);
-})->name('Materi.store');
+})->name('materi.store');
 
-Route::delete('/admin/data-Materi/{id}', function ($id) {
+Route::delete('/admin/data-materi/{id}', function ($id) {
     if (!session('is_admin')) return redirect('/');
     return app(MateriController::class)->destroy($id);
-})->name('Materi.destroy');
-Route::put('/admin/data-Materi/{id}', function (Request $request, $id) {
+})->name('materi.destroy');
+Route::put('/admin/data-materi/{id}', function (Request $request, $id) {
     if (!session('is_admin')) return redirect('/');
     return app(App\Http\Controllers\MateriController::class)->update($request, $id);
-})->name('Materi.update');
+})->name('materi.update');
+
+
+Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
 
 
 // ===================
@@ -94,11 +98,11 @@ Route::post('/admin/data-soal', function (Request $request) {
     return app(SoalController::class)->store($request);
 })->name('soal.store');
 
-Route::delete('/admin/data-Soal/{id}', function ($id) {
+Route::delete('/admin/data-soal/{id}', function ($id) {
     if (!session('is_admin')) return redirect('/');
     return app(SoalController::class)->destroy($id);
 })->name('soal.destroy');
-Route::put('/admin/data-Soal/{id}', function (Request $request, $id) {
+Route::put('/admin/data-soal/{id}', function (Request $request, $id) {
     if (!session('is_admin')) return redirect('/');
     return app(App\Http\Controllers\SoalController::class)->update($request, $id);
 })->name('soal.update');
@@ -125,8 +129,3 @@ Route::put('/admin/data-Siswa/{id}', function (Request $request, $id) {
     return app(App\Http\Controllers\SiswaController::class)->update($request, $id);
 })->name('siswa.update');
 
-
-// Route::get('/chart/sektor', [ChartController::class, 'buahPerSektor']);
-// Route::get('/chart/pegawai', [ChartController::class, 'buahPerPegawai']);
-// Route::get('/chart/cuaca', [ChartController::class, 'buahPerCuaca']);
-// Route::get('/chart/pendapatan-tertinggi', [ChartController::class, 'pendapatanTertinggi']);
