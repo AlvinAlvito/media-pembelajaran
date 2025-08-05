@@ -35,8 +35,8 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" href="/">
-                    <i class="bi-back"></i>
-                    <span>Pembelajaran Biologi</span>
+                    <i class="bi-back text-light"></i>
+                    <span class="text-light"> Pembelajaran Biologi</span>
                 </a>
 
                 <div class="d-lg-none ms-auto me-4">
@@ -171,12 +171,13 @@
                     </div>
 
                     <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
-                        <form class="custom-form subscribe-form" action="#" method="post" role="form">
+                        <form class="custom-form subscribe-form"action="{{ route('quiz', $materi->id) }}" method="GET">
                             <h4 class="mb-4 pb-2">Ayo Mainkan Quiz Untuk Menambah Pengetahuanmu</h4>
-                            <input type="text" name="nama" id="nama" class="form-control"
-                                placeholder="Masukan Nama Kamu.." required="">
                             <div class="col-lg-12 col-12">
-                                <button type="submit" onclick="window.location.href='/quiz'" class="form-control">Mainkan Quizz</button>
+                                <button type="submit" onclick="window.location.href='{{ route('quiz', $materi->id) }}'"
+                                    class="form-control">
+                                    Mainkan Quizz
+                                </button>
 
                             </div>
                         </form>

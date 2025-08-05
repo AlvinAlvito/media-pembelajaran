@@ -25,7 +25,9 @@ Route::get('/materi/{id}', function ($id) {
 })->name('materi.show');
 
 
-Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
+// web.php
+Route::get('/quiz/{materi_id}', [QuizController::class, 'index'])->name('quiz');
+
 
 
 // ===================

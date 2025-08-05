@@ -43,11 +43,11 @@
         </div>
         <a href="#" class="restart-quez">Ulang Quiz</a>
     </div>
-
-    <script src="/script/questions.js"></script>
 </body>
 
 <script>
+    let questions = {!! json_encode($questions, JSON_UNESCAPED_UNICODE) !!};
+
     let $ = document
 
     const time = $.querySelector('.time')
@@ -161,16 +161,19 @@
     function nextQuestionHandler() {
         index++
         timeCount = 20
-        createTemplate(questions)
-        setTimeout(timer, 1000)
 
-        if (index == 7) {
+        // Cek apakah soal sudah habis
+        if (index >= questions.length) {
+            // Tampilkan tombol selesai
             nextQuestion.classList.remove('show-next')
             endQuez.classList.add('show-end')
-        } else {
-            nextQuestion.classList.remove('show-next')
+            return
         }
+
+        createTemplate(questions)
+        nextQuestion.classList.remove('show-next')
     }
+
 
     function updateScore(right) {
 

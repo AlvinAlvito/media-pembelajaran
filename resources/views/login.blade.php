@@ -34,8 +34,8 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" href="/">
-                    <i class="bi-back"></i>
-                    <span>Pembelajaran Biologi</span>
+                    <i class="bi-back text-light"></i>
+                    <span class="text-light">Pembelajaran Biologi</span>
                 </a>
 
                 <div class="d-lg-none ms-auto me-4">
