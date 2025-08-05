@@ -10,22 +10,13 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('materi', function (Blueprint $table) {
+        Schema::create('kategori', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategori_id')
-                ->nullable() // ✅ ini wajib!
-                ->constrained('kategori')
-                ->onDelete('set null');
-
-            $table->string('judul');
+            $table->string('nama');
             $table->string('slug')->nullable();
-            $table->string('gambar')->nullable();
-            $table->text('isi')->nullable();
-            $table->string('link_video')->nullable();
             $table->timestamps();
         });
     }
-
 
 
     /**
@@ -33,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('materis');
+        Schema::dropIfExists('kategoris');
     }
 };

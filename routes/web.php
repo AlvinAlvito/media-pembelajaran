@@ -8,11 +8,19 @@ use App\Http\Controllers\SoalController;
 use App\Http\Controllers\SiswaController;
 
 // ===================
-// Halaman Login
+// Halaman Index & Login
 // ===================
 Route::get('/', function () {
     return view('login');
 })->name('login');
+
+Route::get('/materi', function () {
+    return view('public.materi');
+})->name('materi');
+
+Route::get('/quiz', function () {
+    return view('public.quiz');
+})->name('quiz');
 
 // ===================
 // Proses Login Manual

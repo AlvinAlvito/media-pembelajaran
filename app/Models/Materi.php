@@ -10,14 +10,20 @@ class Materi extends Model
     use HasFactory;
 
     protected $table = 'materi';
-
     protected $fillable = [
+        'kategori_id', // tambahkan ini
         'judul',
         'slug',
         'gambar',
         'isi',
         'link_video',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
 
     /**
      * Relasi: satu materi memiliki banyak soal.
