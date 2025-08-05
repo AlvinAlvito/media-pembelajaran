@@ -11,13 +11,69 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/ebda61e3fa.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        .hide-question {
+            display: none;
+        }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .result-box.show-result {
+            display: block;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
+    <audio id="bg-music" src="/audio/game-theme.mp3" autoplay loop hidden></audio>
+    {{-- Form Nama Siswa --}}
+    <div class="form-nama card bg-light bg-opacity-10 shadow p-4 border-0 rounded-4"
+        style="max-width: 450px; width: 100%;">
+        <div class="card-body text-center">
+            <h3 class="mb-3"><i class="bi bi-person-circle me-2"></i>Selamat Datang!</h3>
+            <img id="winAnimation" src="/images/1.gif" alt="Kemenangan" class="mx-auto d-block mb-4"
+                style="max-width: 200px; display: none;">
+
+            <p class="mb-4">Silakan masukkan nama kamu sebelum memulai quiz {{ $materi->judul }}</p>
+            <input type="text" id="namaSiswa" class="form-control text-center rounded-pill mb-4"
+                placeholder="Siapa Nama Kamu?">
+            <!-- Tombol Mulai Quiz -->
+            <div class="row">
+                <button onclick="mulaiQuiz()" class="btn btn-primary w-100 rounded-pill py-2 fs-5">
+                    Mulai Quiz <i class="bi bi-play-circle me-2"></i>
+                </button>
+
+                <!-- Tombol Kembali ke Materi -->
+                <button onclick="kembaliKeMateri()" class="btn btn-danger w-100 rounded-pill py-2 fs-5 mt-2">
+                    <i class="bi bi-arrow-left-circle me-2"></i>Kembali
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- Kontainer Quiz --}}
+    <div class="container hide-question">
         <header class="header">
-            <h2>Quiz</h2>
-            <p class="status-time">Waktu <span class="time">60</span></p>
+            <h2>Quiz {{ $materi->judul }}</h2>
+            <p class="status-time mb-0">
+                <i class="bi bi-clock-history me-1"></i>
+                Waktu <span class="time fw-bold">60</span>
+            </p>
+
         </header>
         <main class="main-question">
             <div class="question"></div>
@@ -25,10 +81,12 @@
         </main>
         <footer class="footer">
             <p><span class="first"></span> dari <span class="last"></span> Pertanyaan</p>
-            <a class="next-Question" href="#">Selanjutnya</a>
-            <a class="end-Quez" href="#">Selesaikan Quiz</a>
+            <a class="next-Question" href="#"> Selanjutnya <i class="bi bi-arrow-right-circle"></i> </a>
+            <a class="end-Quez" href="#"> Selesaikan Quiz <i class="bi bi-flag-fill"></i></a>
         </footer>
     </div>
+
+    {{-- Kontainer Hasil --}}
     <div class="result-box">
         <div class="cup">
             <img class="cup-image">
@@ -43,9 +101,19 @@
         </div>
         <a href="#" class="restart-quez">Ulang Quiz</a>
     </div>
+
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
+</script>
+
 
 <script>
+    function kembaliKeMateri() {
+        window.location.href = "{{ route('materi.show', $materi->id) }}";
+    }
+
     let questions = {!! json_encode($questions, JSON_UNESCAPED_UNICODE) !!};
 
     let $ = document
@@ -73,6 +141,22 @@
     let timer;
     let index = 0
     let timeCount = 60
+
+    function mulaiQuiz() {
+        const nama = document.getElementById('namaSiswa').value.trim();
+        if (nama === '') {
+            alert('Silakan isi nama kamu dulu!');
+            return;
+        }
+
+        // Simpan nama ke global
+        window.namaSiswa = nama;
+
+        document.querySelector('.form-nama').style.display = 'none';
+        document.querySelector('.container').classList.remove('hide-question');
+        createTemplate(questions);
+    }
+
 
     function createTemplate(questions) {
         answerCotainer.innerHTML = ''
@@ -179,19 +263,19 @@
 
         if (right > 6) {
             cupImage.setAttribute('src', '/images/gold.png')
-            message.innerHTML = 'And congrats!'
+            message.innerHTML = 'Hore! Selamat Yaa :)'
         } else if (right <= 6 && right > 4) {
             cupImage.setAttribute('src', '/images/silver.png')
-            message.innerHTML = 'And nice'
+            message.innerHTML = 'Wih Bagus'
         } else if (right <= 4 && right >= 2) {
             cupImage.setAttribute('src', '/images/bronze.png')
-            message.innerHTML = 'And passable'
+            message.innerHTML = 'Cukup Baik'
         } else if (right == 1) {
             cupImage.setAttribute('src', '/images/emojy.png')
-            message.innerHTML = 'And sorry'
+            message.innerHTML = 'Yah Kurang Bagus :('
         } else {
             cupImage.setAttribute('src', '/images/emojy.png')
-            message.innerHTML = 'You did not get any points!'
+            message.innerHTML = 'Kamu Sama Sekali Ga Dapat Point :('
         }
 
         resultRight.innerHTML = rightQuez
@@ -202,7 +286,34 @@
     function showResultQuez() {
         containerQuestion.classList.add('hide-question')
         resultBox.classList.add('show-result')
+
+        let nilaiAkhir = Math.round((rightQuez / questions.length) * 100);
+
+        fetch("/quiz/submit", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    nama_siswa: window.namaSiswa,
+                    materi_id: {{ $materi->id }},
+                    jumlah_benar: rightQuez,
+                    total_soal: questions.length,
+                    nilai: nilaiAkhir
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Disimpan ke DB:", data);
+            })
+            .catch(error => {
+                console.error("Gagal menyimpan:", error);
+            });
+
+
     }
+
 
     function restartQuezHandler() {
         location.reload()

@@ -6,19 +6,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Soal;
 use App\Models\Materi;
+use App\Models\SesiJawab;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
     public function index($materi_id)
     {
-        // Cek apakah ID materi valid
         $materi = Materi::findOrFail($materi_id);
-
-        // Ambil soal berdasarkan ID materi
         $soal = Soal::where('materi_id', $materi_id)->get();
 
-        // Ubah data soal ke format JavaScript
         $questions = [];
 
         foreach ($soal as $index => $item) {
@@ -40,5 +37,26 @@ class QuizController extends Controller
             'questions' => $questions,
             'materi' => $materi
         ]);
+    }
+
+    public function submitResult(Request $request)
+    {
+        $request->validate([
+            'nama_siswa' => 'required|string',
+            'materi_id' => 'required|exists:materi,id',
+            'jumlah_benar' => 'required|integer',
+            'total_soal' => 'required|integer',
+            'nilai' => 'required|numeric'
+        ]);
+
+        $sesi = SesiJawab::create([
+            'nama_siswa' => $request->nama_siswa,
+            'materi_id' => $request->materi_id,
+            'jumlah_benar' => $request->jumlah_benar,
+            'total_soal' => $request->total_soal,
+            'nilai' => $request->nilai,
+        ]);
+
+        return response()->json(['success' => true, 'sesi_id' => $sesi->id]);
     }
 }

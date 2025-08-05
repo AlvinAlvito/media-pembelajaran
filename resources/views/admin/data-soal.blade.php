@@ -20,15 +20,15 @@
                         <i class="bi bi-question-circle me-2"></i>
                         <span class="text fs-5">Data Soal</span>
                     </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Soal
-                    </button>
+                  
                 </div>
 
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
-
+                  <button class="btn btn-primary text-end" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Soal
+                    </button>
                 <div class="table-responsive">
                     <table id="tabelFuzzifikasi" class="table table-bordered table-striped">
                         <thead class="table-light">

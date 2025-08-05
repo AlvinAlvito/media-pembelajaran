@@ -116,10 +116,10 @@
                         <h6 class="text-white mt-3">
                             Sistem Regulasi Kelas XI – Interaktif, Edukatif, dan Mudah Dipahami
                         </h6>
-
                         <a href="#section_materi" class="btn btn-light btn-lg mt-4">
-                            Mulai Belajar
+                             Mulai Belajar <i class="bi bi-book me-2"></i>
                         </a>
+
                     </div>
 
                 </div>
@@ -152,8 +152,8 @@
                     <div class="col-lg-6 col-12">
                         <div class="custom-block custom-block-overlay h-100">
                             <div class="d-flex flex-column h-100">
-                                <img src="images/topics/tujuan-pembelajaran.jpg" class="custom-block-image img-fluid"
-                                    alt="Ilustrasi Tujuan Pembelajaran">
+                                <img src="https://thumbs.dreamstime.com/b/biology-research-microscope-plants-insects-viruses-dna-vector-design-generative-ai-comprehensive-illustration-covering-elements-391041517.jpg"
+                                    class="custom-block-image img-fluid" alt="Ilustrasi Tujuan Pembelajaran">
 
                                 <div class="custom-block-overlay-text d-flex">
                                     <div>
@@ -441,6 +441,30 @@
                 </div>
             </div>
         </section>
+        <section class="faq-section section-padding" id="section_4">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-12">
+                        <h2 class="mb-4">Tentang Saya</h2>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+
+
+                    <div class="col-lg-6 col-12 m-auto">
+                        <h3>Pristy Karunia Putri</h3>
+                        <h3>Mahasiswi Tadris Biologi UINSU</h3>
+                    </div>
+
+                    <div class="col-lg-5 col-12">
+                        <img src="images/faq_graphic.jpg" class="img-fluid" alt="FAQ Sistem Regulasi">
+                    </div>
+
+                </div>
+            </div>
+        </section>
 
 
 
@@ -488,12 +512,12 @@
                     <h6 class="site-footer-title mb-3">Kontak</h6>
                     <p class="text-white d-flex mb-1">
                         <a href="mailto:biologi.xi@media.com" class="site-footer-link">
-                            biologi.xi@media.com
+                            +62 822-8638-4544
                         </a>
                     </p>
                     <p class="text-white d-flex">
                         <a href="https://instagram.com/biologi_xi" target="_blank" class="site-footer-link">
-                            @biologi_xi
+                            Pristy Karunia Putri
                         </a>
                     </p>
                 </div>

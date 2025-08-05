@@ -1,62 +1,66 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ProdukPenjualan;
-use App\Models\HasilRegresi;
+use App\Models\SesiJawab;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $produk = ProdukPenjualan::all();
-        $regresi = HasilRegresi::with('produk')->get();
-
-        // 1. Total penjualan per produk (Jan–Jun)
-        $totalPerProduk = $produk->map(function ($item) {
-            return [
-                'name' => $item->nama_produk,
-                'total' => $item->jan + $item->feb + $item->mar + $item->apr + $item->mei + $item->jun
-            ];
-        });
-
-        // 2. Prediksi per produk (Jul–Des)
-        $prediksiPerProduk = $regresi->map(function ($item) {
-            return [
-                'name' => $item->produk->nama_produk,
-                'data' => [$item->jul, $item->agu, $item->sep, $item->okt, $item->nov, $item->des]
-            ];
-        });
-
-        // 3. MAPE per produk
-        $mapePerProduk = $regresi->map(function ($item) {
-            return [
-                'name' => $item->produk->nama_produk,
-                'mape' => $item->mape
-            ];
-        });
-
-        // 4. Total penjualan gabungan per bulan (Jan–Jun)
-        $totalPerBulan = [
-            'Jan' => $produk->sum('jan'),
-            'Feb' => $produk->sum('feb'),
-            'Mar' => $produk->sum('mar'),
-            'Apr' => $produk->sum('apr'),
-            'Mei' => $produk->sum('mei'),
-            'Jun' => $produk->sum('jun')
+        // Chart 1: Distribusi Nilai
+        $range = [
+            '0-20' => 0,
+            '21-40' => 0,
+            '41-60' => 0,
+            '61-80' => 0,
+            '81-100' => 0
         ];
 
-        // 5. Top 5 Produk terlaris
-        $topProduk = $totalPerProduk->sortByDesc('total')->take(5);
+        foreach (SesiJawab::all() as $sesi) {
+            $nilai = $sesi->nilai;
+            if ($nilai <= 20)
+                $range['0-20']++;
+            elseif ($nilai <= 40)
+                $range['21-40']++;
+            elseif ($nilai <= 60)
+                $range['41-60']++;
+            elseif ($nilai <= 80)
+                $range['61-80']++;
+            else
+                $range['81-100']++;
+        }
 
-        return view('admin.index', [
-            'totalPerProduk' => $totalPerProduk,
-            'prediksiPerProduk' => $prediksiPerProduk,
-            'mapePerProduk' => $mapePerProduk,
-            'totalPerBulan' => $totalPerBulan,
-            'topProduk' => $topProduk,
-        ]);
+        // Chart 2: Jumlah peserta per materi
+        $pesertaPerMateri = SesiJawab::with('materi')
+            ->selectRaw('materi_id, COUNT(*) as total')
+            ->groupBy('materi_id')
+            ->get()
+            ->mapWithKeys(fn($s) => [$s->materi->judul ?? 'Tidak Diketahui' => $s->total])
+            ->toArray();
+
+        // Chart 3: Rata-rata nilai per materi
+        $rataRataNilai = SesiJawab::with('materi')
+            ->selectRaw('materi_id, AVG(nilai) as rata')
+            ->groupBy('materi_id')
+            ->get()
+            ->mapWithKeys(fn($s) => [$s->materi->judul ?? 'Tidak Diketahui' => round($s->rata, 2)])
+            ->toArray();
+
+        // Chart 4: Aktivitas kuis per hari
+        $aktivitasHarian = SesiJawab::selectRaw('DATE(created_at) as tanggal, COUNT(*) as total')
+            ->groupBy('tanggal')
+            ->orderBy('tanggal')
+            ->pluck('total', 'tanggal')
+            ->toArray();
+
+
+        return view('admin.index', compact(
+            'range',
+            'pesertaPerMateri',
+            'rataRataNilai',
+            'aktivitasHarian'
+        ));
     }
 }

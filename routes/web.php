@@ -10,6 +10,8 @@ use App\Http\Controllers\SoalController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\QuizController;
+
+use App\Http\Controllers\DashboardController;
 // ===================
 // Halaman Index & Login
 // ===================
@@ -27,6 +29,7 @@ Route::get('/materi/{id}', function ($id) {
 
 // web.php
 Route::get('/quiz/{materi_id}', [QuizController::class, 'index'])->name('quiz');
+Route::post('/quiz/submit', [QuizController::class, 'submitResult'])->name('quiz.submit');
 
 
 
@@ -53,14 +56,11 @@ Route::get('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-// ===================
-// Dashboard Admin
-// ===================
+
 Route::get('/admin', function () {
-    return view('admin.index');
+    if (!session('is_admin')) return redirect('/');
+    return app(DashboardController::class)->index();
 })->name('admin.index');
-
-
 // ===================
 // CRUD Data Materi
 // ===================
@@ -117,17 +117,8 @@ Route::get('/admin/data-siswa', function () {
     return app(SiswaController::class)->index();
 })->name('siswa.index');
 
-Route::post('/admin/data-Siswa', function (Request $request) {
-    if (!session('is_admin')) return redirect('/');
-    return app(SiswaController::class)->store($request);
-})->name('siswa.store');
-
 Route::delete('/admin/data-siswa/{id}', function ($id) {
     if (!session('is_admin')) return redirect('/');
     return app(SiswaController::class)->destroy($id);
 })->name('siswa.destroy');
-Route::put('/admin/data-Siswa/{id}', function (Request $request, $id) {
-    if (!session('is_admin')) return redirect('/');
-    return app(App\Http\Controllers\SiswaController::class)->update($request, $id);
-})->name('siswa.update');
 
