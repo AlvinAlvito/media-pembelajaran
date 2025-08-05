@@ -117,7 +117,7 @@
                             Sistem Regulasi Kelas XI – Interaktif, Edukatif, dan Mudah Dipahami
                         </h6>
                         <a href="#section_materi" class="btn btn-light btn-lg mt-4">
-                             Mulai Belajar <i class="bi bi-book me-2"></i>
+                            Mulai Belajar <i class="bi bi-book me-2"></i>
                         </a>
 
                     </div>
@@ -446,7 +446,7 @@
                 <div class="row">
 
                     <div class="col-lg-6 col-12">
-                        <h2 class="mb-4">Tentang Saya</h2>
+                        <h2 class="mb-4">Tentang Saya?</h2>
                     </div>
 
                     <div class="clearfix"></div>
@@ -456,10 +456,20 @@
                     <div class="col-lg-6 col-12 m-auto">
                         <h3>Pristy Karunia Putri</h3>
                         <h3>Mahasiswi Tadris Biologi UINSU</h3>
+                        <p>Hai hai! Selamat datang di pojok belajarku!
+                            Aku Pristy Karunia Putri, mahasiswi Tadris Biologi UINSU. Di sini aku bakal ngajak kamu
+                            jalan-jalan bareng ke dunia sistem regulasi, nggak cuma hafalan, tapi juga seru-seruan
+                            bareng biologi!
+                        </p>
+                        <p>
+                            Penasaran gimana tubuh kita bisa ngatur suhu, detak jantung, atau bahkan stres? Yuk, cari
+                            tahu bareng! Semoga website ini bisa bikin belajar jadi lebih asyik dan nggak bikin ngantuk.
+
+                            Siap belajar sambil santai? Yuk mulai!</p>
                     </div>
 
-                    <div class="col-lg-5 col-12">
-                        <img src="images/faq_graphic.jpg" class="img-fluid" alt="FAQ Sistem Regulasi">
+                    <div class="col-lg-6 col-12">
+                        <img src="/images/pp.png" class="img-fluid" alt="FAQ Sistem Regulasi">
                     </div>
 
                 </div>
