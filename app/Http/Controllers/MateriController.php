@@ -34,7 +34,10 @@ class MateriController extends Controller
 
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('materi', 'public');
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('materi'), $filename);
+            $gambarPath = 'materi/' . $filename; // path relatif dari public
         }
 
         Materi::create([
@@ -73,7 +76,15 @@ class MateriController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('materi', 'public');
+            // hapus gambar lama kalau ada
+            if ($materi->gambar && file_exists(public_path($materi->gambar))) {
+                unlink(public_path($materi->gambar));
+            }
+
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('materi'), $filename);
+            $data['gambar'] = 'materi/' . $filename;
         }
 
         $materi->update($data);
@@ -88,9 +99,9 @@ class MateriController extends Controller
     {
         $materi = Materi::findOrFail($id);
 
-        // Optional: hapus file gambar jika ada
-        if ($materi->gambar && \Storage::disk('public')->exists($materi->gambar)) {
-            \Storage::disk('public')->delete($materi->gambar);
+        // Hapus file gambar utama jika ada
+        if ($materi->gambar && file_exists(public_path($materi->gambar))) {
+            unlink(public_path($materi->gambar));
         }
 
         $materi->delete();
@@ -104,4 +115,23 @@ class MateriController extends Controller
         return view('materi.show', compact('materi'));
     }
 
+    /**
+     * Upload gambar dari CKEditor.
+     */
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('materi'), $filename);
+
+            $url = asset('materi/' . $filename);
+
+            return response()->json([
+                'uploaded' => 1,
+                'fileName' => $filename,
+                'url' => $url
+            ]);
+        }
+    }
 }

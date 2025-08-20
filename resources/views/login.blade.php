@@ -245,8 +245,9 @@
                                                             <span
                                                                 class="badge bg-secondary rounded-pill ms-auto">📚</span>
                                                         </div>
+
                                                         @if ($item->gambar)
-                                                            <img src="{{ asset('storage/' . $item->gambar) }}"
+                                                            <img src="{{ asset($item->gambar) }}"
                                                                 class="custom-block-image img-fluid mt-3"
                                                                 alt="gambar materi"
                                                                 style="object-fit: cover; width: 100%; height: 200px;">
@@ -264,8 +265,10 @@
                             @endforeach
                         </div>
 
+
                     </div>
                 </div>
+            </div>
         </section>
 
 

@@ -78,10 +78,19 @@ Route::delete('/admin/data-materi/{id}', function ($id) {
     if (!session('is_admin')) return redirect('/');
     return app(MateriController::class)->destroy($id);
 })->name('materi.destroy');
+
 Route::put('/admin/data-materi/{id}', function (Request $request, $id) {
     if (!session('is_admin')) return redirect('/');
-    return app(App\Http\Controllers\MateriController::class)->update($request, $id);
+    return app(MateriController::class)->update($request, $id);
 })->name('materi.update');
+
+// ===================
+// Upload Gambar CKEditor
+// ===================
+Route::post('/materi/upload', function (Request $request) {
+    if (!session('is_admin')) return redirect('/');
+    return app(App\Http\Controllers\MateriController::class)->upload($request);
+})->name('materi.upload');
 
 
 Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');

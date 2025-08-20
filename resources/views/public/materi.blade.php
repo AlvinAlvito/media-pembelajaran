@@ -25,6 +25,15 @@
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
     <link href="/css/templatemo-topic-listing.css" rel="stylesheet">
+    <style>
+        .isi-materi img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            /* biar agak rapi tengah */
+        }
+    </style>
 
 </head>
 
@@ -135,21 +144,20 @@
         </header>
 
 
-        {{-- ISI MATERI --}}
         <section class="topics-detail-section section-padding" id="topics-detail">
-
-
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-12 m-auto">
                         <h3 class="mb-4">{{ $materi->judul }}</h3>
+
                         {{-- Gambar Materi Full Width --}}
                         @if ($materi->gambar)
                             <div class="w-100 mb-4">
-                                <img src="{{ asset('storage/' . $materi->gambar) }}" class="img-fluid w-100"
+                                <img src="{{ asset($materi->gambar) }}" class="img-fluid w-100"
                                     style="max-height: 500px; object-fit: cover;" alt="Gambar Materi">
                             </div>
                         @endif
+
                         {{-- Isi Materi --}}
                         <div class="isi-materi">
                             {!! $materi->isi !!}
@@ -158,6 +166,7 @@
                 </div>
             </div>
         </section>
+
 
 
 
@@ -171,10 +180,12 @@
                     </div>
 
                     <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
-                        <form class="custom-form subscribe-form"action="{{ route('quiz', $materi->id) }}" method="GET">
+                        <form class="custom-form subscribe-form"action="{{ route('quiz', $materi->id) }}"
+                            method="GET">
                             <h4 class="mb-4 pb-2">Ayo Mainkan Quiz Untuk Menambah Pengetahuanmu</h4>
                             <div class="col-lg-12 col-12">
-                                <button type="submit" onclick="window.location.href='{{ route('quiz', $materi->id) }}'"
+                                <button type="submit"
+                                    onclick="window.location.href='{{ route('quiz', $materi->id) }}'"
                                     class="form-control">
                                     Mainkan Quizz
                                 </button>

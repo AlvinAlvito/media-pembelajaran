@@ -43,8 +43,7 @@
                         <div class="col-md-4 mb-4">
                             <div class="card shadow-sm h-100 d-flex flex-column">
                                 @if ($item->gambar)
-                                    <img src="{{ asset('storage/' . $item->gambar) }}" class="card-img-top img-fluid"
-                                        alt="gambar materi"
+                                    <img src="{{ asset($item->gambar) }}" class="card-img-top img-fluid" alt="gambar materi"
                                         style="height: 300px; object-fit: cover; width: 100%; min-width: 100%;">
                                 @endif
 
@@ -96,6 +95,7 @@
                         </div>
                     @endforelse
                 </div>
+
 
 
             </div>
@@ -160,15 +160,16 @@
                                 <input type="url" name="link_video" class="form-control">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label>Gambar</label>
+                                <label>Gambar Cover</label>
                                 <input type="file" name="gambar" class="form-control">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label>Isi Materi</label>
-                            <textarea name="isi" class="form-control" rows="4"></textarea>
+                            <textarea name="isi" id="editorIsi"></textarea>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary">Simpan</button>
@@ -221,14 +222,15 @@
                                         value="{{ $item->link_video }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Ganti Gambar (opsional)</label>
+                                    <label>Ganti Gambar Cover (opsional)</label>
                                     <input type="file" name="gambar" class="form-control">
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label>Isi Materi</label>
-                                <textarea name="isi" class="form-control" rows="4">{{ $item->isi }}</textarea>
+                                {{-- ID unik agar tiap modal beda --}}
+                                <textarea name="isi" id="editorIsi{{ $item->id }}">{{ $item->isi }}</textarea>
                             </div>
 
                         </div>
@@ -243,6 +245,7 @@
     @endforeach
 
 
+
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -252,25 +255,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs5.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('textarea[name="isi"]').summernote({
-                height: 250,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['insert', ['link', 'table']],
-                    ['view', ['codeview']]
-                ]
-            });
-        });
-    </script>
+
 
 
     <script>
         $(function() {
             $('#datatable').DataTable();
         });
+    </script>
+    {{-- CKEditor --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script>
+        // Tambah Materi
+        ClassicEditor
+            .create(document.querySelector('#editorIsi'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('materi.upload') }}?_token={{ csrf_token() }}"
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Edit Materi (looping semua modal edit)
+        @foreach ($materi as $item)
+            ClassicEditor
+                .create(document.querySelector('#editorIsi{{ $item->id }}'), {
+                    ckfinder: {
+                        uploadUrl: "{{ route('materi.upload') }}?_token={{ csrf_token() }}"
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
     </script>
 @endsection
